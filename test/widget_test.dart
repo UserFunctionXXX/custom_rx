@@ -12,11 +12,19 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:custom_rx/main.dart';
 
 void main() {
-  test('testa RepoStore name', () async {
-    final GithubStore store = GithubStore();
+  group('testa store', () {
+    test('testa RepoStore sem receber dados', () async {
+      final GithubStore store = GithubStore();
 
-    await store.fetchRepos();
+      expect(store.state.value.length, 0);
+    });
 
-    expect(store.state.value.length, greaterThanOrEqualTo(1));
+    test('testa RepoStore receber dados', () async {
+      final GithubStore store = GithubStore();
+
+      await store.fetchRepos();
+
+      expect(store.state.value.length, greaterThanOrEqualTo(1));
+    });
   });
 }
