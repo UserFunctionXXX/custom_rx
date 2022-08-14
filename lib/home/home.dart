@@ -1,16 +1,19 @@
+import 'package:custom_rx/home/github/github_page.dart';
 import 'package:custom_rx/home/home_controller.dart';
+import 'package:custom_rx/home/home_store.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
-  final HomeController controller = HomeController();
-
-  Home({Key? key}) : super(key: key);
+  const Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  final HomeController controller = HomeController();
+  final HomeStore store = HomeStore();
+
   @override
   void initState() {
     super.initState();
@@ -18,7 +21,8 @@ class _HomeState extends State<Home> {
 
   @override
   void dispose() {
-    widget.controller.disposeListeners();
+    controller.disposeListeners();
+    store.disposeListeners();
     super.dispose();
   }
 
@@ -29,23 +33,49 @@ class _HomeState extends State<Home> {
         title: const Text('Reatividade Renan'),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: widget.controller.incrementValue,
+        onPressed: () {
+          controller.incrementValue();
+          store.incrementCounter();
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ),
       body: Center(
-        child: ValueListenableBuilder(
-          builder: (BuildContext context, value, Widget? child) {
-            return Text(
-              'Valor do contador ${widget.controller.counter.value}',
-              style: const TextStyle(fontSize: 25),
-            );
-          },
-          valueListenable: widget.controller.counter,
-          child: Text(
-            'Valor do contador ${widget.controller.counter.value}',
-            style: const TextStyle(fontSize: 25),
-          ),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ValueListenableBuilder(
+              builder: (BuildContext context, value, Widget? child) {
+                return Text(
+                  'Valor do contador com custom RX ${controller.counter.value}',
+                  style: const TextStyle(fontSize: 20),
+                );
+              },
+              valueListenable: controller.counter,
+            ),
+            ValueListenableBuilder(
+              builder: (BuildContext context, value, Widget? child) {
+                return Text(
+                  'Valor do contador com Store ${store.counter.value}',
+                  style: const TextStyle(fontSize: 20),
+                );
+              },
+              valueListenable: store.counter,
+            ),
+            const SizedBox(
+              height: 55,
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const GithubPage()),
+                );
+              },
+              child: const Text('Navegar Reatividade API GITHUB'),
+            ),
+          ],
         ),
       ),
     );

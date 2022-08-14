@@ -1,3 +1,4 @@
+import 'package:asuka/asuka.dart';
 import 'package:custom_rx/home/Home.dart';
 import 'package:flutter/material.dart';
 
@@ -11,10 +12,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      builder: Asuka.builder,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: Home(),
+      home: const Home(),
     );
   }
 }
