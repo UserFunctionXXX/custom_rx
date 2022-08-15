@@ -16,7 +16,7 @@ void main() {
     test('testa RepoStore sem receber dados', () async {
       final GithubStore store = GithubStore();
 
-      expect(store.state.value.length, 0);
+      expect(store.state.length, 0);
     });
 
     test('testa RepoStore receber dados', () async {
@@ -24,7 +24,7 @@ void main() {
 
       await store.fetchRepos();
 
-      expect(store.state.value.length, greaterThanOrEqualTo(1));
+      expect(store.state.length, greaterThanOrEqualTo(1));
     });
   });
 }

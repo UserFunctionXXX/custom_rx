@@ -1,6 +1,8 @@
 import 'package:asuka/asuka.dart';
 import 'package:custom_rx/home/github/github_store.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_mobx/flutter_mobx.dart';
+import 'package:mobx/mobx.dart';
 
 class GithubPage extends StatefulWidget {
   const GithubPage({Key? key}) : super(key: key);
@@ -26,17 +28,16 @@ class _GithubPageState extends State<GithubPage> {
   @override
   void initState() {
     super.initState();
+    reaction((_) => store.error, (error) {
+      AsukaSnackbar.warning('Erro ao consultar github').show();
+    });
 
-    store.loading.addListener(() {
-      if (store.loading.value) {
+    reaction((_) => store.loading, <bool>(isLoading) {
+      if (isLoading) {
         Overlay.of(context)?.insert(overlayLoading);
       } else {
         overlayLoading.remove();
       }
-    });
-
-    store.error.addListener(() {
-      AsukaSnackbar.warning('Erro ao consultar github').show();
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -55,14 +56,14 @@ class _GithubPageState extends State<GithubPage> {
         child: const Icon(Icons.refresh),
       ),
       appBar: AppBar(
-        title: Text('Repositorios UserFunctionXXX'),
+        title: const Text('Repositorios UserFunctionXXX'),
       ),
       body: Container(
-        child: ValueListenableBuilder(
-          builder: (BuildContext context, value, Widget? child) {
+        child: Observer(
+          builder: (_) {
             return ListView.builder(
               itemBuilder: (context, index) {
-                final item = store.state.value[index];
+                final item = store.state[index];
 
                 return ListTile(
                   title: Text(
@@ -71,10 +72,9 @@ class _GithubPageState extends State<GithubPage> {
                   subtitle: Text(item.fullname),
                 );
               },
-              itemCount: store.state.value.length,
+              itemCount: store.state.length,
             );
           },
-          valueListenable: store.state,
         ),
       ),
     );

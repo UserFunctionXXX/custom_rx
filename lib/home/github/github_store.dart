@@ -1,24 +1,32 @@
 import 'package:custom_rx/models/repo_model.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:mobx/mobx.dart';
+part 'github_store.g.dart';
 
 const URL_PORTIFOLIO = 'https://api.github.com/users/UserFunctionXXX/repos';
 
-class GithubStore {
-  final loading = ValueNotifier(false);
-  final error = ValueNotifier<Exception?>(null);
-  final state = ValueNotifier<List<RepoModel>>([]);
+class GithubStore = _GithubStoreBase with _$GithubStore;
+abstract class _GithubStoreBase with Store {
+  
+  @observable
+  bool loading = false;
+  
+  @observable
+  Exception? error;
+  
+  @observable
+  List<RepoModel> state = <RepoModel>[];
 
+  @action
   Future<void> fetchRepos() async {
-    loading.value = true;
+    loading = true;
     try {
       final result = await Dio().get(URL_PORTIFOLIO);
-      state.value =
-          (result.data as List).map((e) => RepoModel.fromMap(e)).toList();
+      state = (result.data as List).map((e) => RepoModel.fromMap(e)).toList();
     } catch (e) {
-      error.value = Exception('Erro ao pegar repositorio');
+      error = Exception('Erro ao pegar repositorio');
     } finally {
-      loading.value = false;
+      loading = false;
     }
   }
 }

@@ -1,7 +1,6 @@
-import 'package:custom_rx/custom_rx/custom_rx.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
-class HomeStore {
+class CounterStore {
   ValueNotifier counter = ValueNotifier<int>(0);
 
   void incrementCounter() {

@@ -1,6 +1,6 @@
+import 'package:custom_rx/home/counter_store.dart';
 import 'package:custom_rx/home/github/github_page.dart';
 import 'package:custom_rx/home/home_controller.dart';
-import 'package:custom_rx/home/home_store.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatefulWidget {
@@ -12,7 +12,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   final HomeController controller = HomeController();
-  final HomeStore store = HomeStore();
+  final CounterStore store = CounterStore();
 
   @override
   void initState() {
