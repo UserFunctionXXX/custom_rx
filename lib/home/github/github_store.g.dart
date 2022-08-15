@@ -57,12 +57,34 @@ mixin _$GithubStore on _GithubStoreBase, Store {
     });
   }
 
-  late final _$fetchReposAsyncAction =
-      AsyncAction('_GithubStoreBase.fetchRepos', context: context);
+  late final _$insertReposAsyncAction =
+      AsyncAction('_GithubStoreBase.insertRepos', context: context);
 
   @override
-  Future<void> fetchRepos() {
-    return _$fetchReposAsyncAction.run(() => super.fetchRepos());
+  Future<void> insertRepos(List<RepoModel> repos) {
+    return _$insertReposAsyncAction.run(() => super.insertRepos(repos));
+  }
+
+  late final _$insertErrorAsyncAction =
+      AsyncAction('_GithubStoreBase.insertError', context: context);
+
+  @override
+  Future<void> insertError(Exception e) {
+    return _$insertErrorAsyncAction.run(() => super.insertError(e));
+  }
+
+  late final _$_GithubStoreBaseActionController =
+      ActionController(name: '_GithubStoreBase', context: context);
+
+  @override
+  dynamic setLoading(bool isLoading) {
+    final _$actionInfo = _$_GithubStoreBaseActionController.startAction(
+        name: '_GithubStoreBase.setLoading');
+    try {
+      return super.setLoading(isLoading);
+    } finally {
+      _$_GithubStoreBaseActionController.endAction(_$actionInfo);
+    }
   }
 
   @override

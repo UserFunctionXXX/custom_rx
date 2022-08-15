@@ -1,5 +1,7 @@
 import 'package:asuka/asuka.dart';
+import 'package:custom_rx/home/github/github_controller.dart';
 import 'package:custom_rx/home/github/github_store.dart';
+import 'package:custom_rx/models/repo_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_mobx/flutter_mobx.dart';
 import 'package:mobx/mobx.dart';
@@ -13,6 +15,8 @@ class GithubPage extends StatefulWidget {
 
 class _GithubPageState extends State<GithubPage> {
   final GithubStore store = GithubStore();
+  final GithubController controller = GithubController();
+
   final overlayLoading = OverlayEntry(builder: (_) {
     return SafeArea(
       child: Container(
@@ -41,7 +45,16 @@ class _GithubPageState extends State<GithubPage> {
     });
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      store.fetchRepos();
+      store.setLoading(true);
+      controller.fetchRepos().then((repos) {
+        if (repos.isRight) {
+          store.insertRepos(repos.right);
+        } else {
+          store.insertError(repos.left);
+        }
+
+        store.setLoading(false);
+      });
     });
   }
 
@@ -50,7 +63,16 @@ class _GithubPageState extends State<GithubPage> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          store.fetchRepos();
+          store.setLoading(true);
+          controller.fetchRepos().then((repos) {
+            if (repos.isRight) {
+              store.insertRepos(repos.right);
+            } else {
+              store.insertError(repos.left);
+            }
+
+            store.setLoading(false);
+          });
         },
         tooltip: 'Increment',
         child: const Icon(Icons.refresh),
